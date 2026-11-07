@@ -1,7 +1,25 @@
-# ======================================
+# =====================================
 # TechFlow Solutions
 # Sistema de Gerenciamento de Tarefas
 # =====================================
+
+import json
+import os
+
+ARQUIVO_DADOS = "tarefas.json"
+
+
+def carregar_tarefas():
+    if os.path.exists(ARQUIVO_DADOS):
+        with open(ARQUIVO_DADOS, "r", encoding="utf-8") as arquivo:
+            return json.load(arquivo)
+    return []
+
+
+def salvar_tarefas(tarefas):
+    with open(ARQUIVO_DADOS, "w", encoding="utf-8") as arquivo:
+        json.dump(tarefas, arquivo, indent=4, ensure_ascii=False)
+
 
 def menu():
     print("\n===== TECHFLOW SOLUTIONS =====")
@@ -12,23 +30,132 @@ def menu():
     print("5 - Sair")
 
 
+def cadastrar_tarefa(tarefas):
+    titulo = input("Digite o título da tarefa: ").strip()
+
+    if not titulo:
+        print("O título não pode ficar vazio!")
+        return
+
+    prioridade = input("Prioridade (Baixa, Média ou Alta): ").strip().capitalize()
+
+    if prioridade not in ["Baixa", "Média", "Alta"]:
+        print("Prioridade inválida!")
+        return
+
+    tarefa = {
+        "id": max([t["id"] for t in tarefas], default=0) + 1,
+        "titulo": titulo,
+        "prioridade": prioridade,
+        "status": "A Fazer"
+    }
+
+    tarefas.append(tarefa)
+    salvar_tarefas(tarefas)
+    print("Tarefa cadastrada com sucesso!")
+
+
+def consultar_tarefas(tarefas):
+    if not tarefas:
+        print("Nenhuma tarefa cadastrada.")
+        return
+
+    print("\n===== LISTA DE TAREFAS =====")
+
+    for tarefa in tarefas:
+        print(
+            f"ID: {tarefa['id']} | "
+            f"Título: {tarefa['titulo']} | "
+            f"Prioridade: {tarefa['prioridade']} | "
+            f"Status: {tarefa['status']}"
+        )
+
+
+def editar_tarefa(tarefas):
+    consultar_tarefas(tarefas)
+
+    if not tarefas:
+        return
+
+    try:
+        id_tarefa = int(input("Digite o ID da tarefa que deseja editar: "))
+    except ValueError:
+        print("Digite um ID numérico válido!")
+        return
+
+    for tarefa in tarefas:
+        if tarefa["id"] == id_tarefa:
+            novo_titulo = input("Novo título: ").strip()
+            nova_prioridade = input(
+                "Nova prioridade (Baixa, Média ou Alta): "
+            ).strip().capitalize()
+            novo_status = input(
+                "Novo status (A Fazer, Em Progresso ou Concluída): "
+            ).strip().title()
+
+            if not novo_titulo:
+                print("O título não pode ficar vazio!")
+                return
+
+            if nova_prioridade not in ["Baixa", "Média", "Alta"]:
+                print("Prioridade inválida!")
+                return
+
+            if novo_status not in ["A Fazer", "Em Progresso", "Concluída"]:
+                print("Status inválido!")
+                return
+
+            tarefa["titulo"] = novo_titulo
+            tarefa["prioridade"] = nova_prioridade
+            tarefa["status"] = novo_status
+
+            salvar_tarefas(tarefas)
+            print("Tarefa atualizada com sucesso!")
+            return
+
+    print("Tarefa não encontrada!")
+
+
+def excluir_tarefa(tarefas):
+    consultar_tarefas(tarefas)
+
+    if not tarefas:
+        return
+
+    try:
+        id_tarefa = int(input("Digite o ID da tarefa que deseja excluir: "))
+    except ValueError:
+        print("Digite um ID numérico válido!")
+        return
+
+    for tarefa in tarefas:
+        if tarefa["id"] == id_tarefa:
+            tarefas.remove(tarefa)
+            salvar_tarefas(tarefas)
+            print("Tarefa excluída com sucesso!")
+            return
+
+    print("Tarefa não encontrada!")
+
+
 def iniciar_sistema():
+    tarefas = carregar_tarefas()
+
     while True:
         menu()
-
         opcao = input("Escolha uma opção: ")
 
         if opcao == "1":
-            print("Cadastro de tarefas selecionado!")
+            cadastrar_tarefa(tarefas)
 
         elif opcao == "2":
-            print("Consulta de tarefas selecionada!")
+            consultar_tarefas(tarefas)
 
         elif opcao == "3":
-            print("Edição de tarefas selecionada!")
+            editar_tarefa(tarefas)
 
         elif opcao == "4":
-            print("Exclusão de tarefas selecionada!")
+            excluir_tarefa(tarefas)
 
         elif opcao == "5":
             print("Encerrando o sistema...")
