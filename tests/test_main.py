@@ -6,7 +6,8 @@ from src.main import (
     cadastrar_tarefa,
     consultar_tarefas,
     editar_tarefa,
-    excluir_tarefa
+    excluir_tarefa,
+    filtrar_tarefas
 )
 
 
@@ -24,7 +25,8 @@ class TestSistema(unittest.TestCase):
     def test_menu_exibe_opcoes(self, mock_print):
         menu()
         mock_print.assert_any_call("1 - Cadastrar tarefa")
-        mock_print.assert_any_call("5 - Sair")
+        mock_print.assert_any_call("5 - Filtrar tarefas por status")
+        mock_print.assert_any_call("6 - Sair")
 
     @patch("src.main.salvar_tarefas")
     @patch("builtins.input", side_effect=["Estudar Python", "Alta"])
@@ -47,7 +49,6 @@ class TestSistema(unittest.TestCase):
         })
 
         consultar_tarefas(self.tarefas)
-
         mock_print.assert_any_call("\n===== LISTA DE TAREFAS =====")
 
     @patch("src.main.salvar_tarefas")
@@ -84,6 +85,23 @@ class TestSistema(unittest.TestCase):
 
         self.assertEqual(len(self.tarefas), 0)
         mock_salvar.assert_called_once()
+
+    @patch("builtins.print")
+    @patch("builtins.input", return_value="1")
+    def test_filtrar_tarefas(self, mock_input, mock_print):
+        self.tarefas.append({
+            "id": 1,
+            "titulo": "Estudar Python",
+            "prioridade": "Alta",
+            "status": "A Fazer"
+        })
+
+        filtrar_tarefas(self.tarefas)
+
+        mock_print.assert_any_call(
+            "ID: 1 | Título: Estudar Python | "
+            "Prioridade: Alta | Status: A Fazer"
+        )
 
 
 if __name__ == "__main__":
