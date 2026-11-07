@@ -1,3 +1,4 @@
+
 # =====================================
 # TechFlow Solutions
 # Sistema de Gerenciamento de Tarefas
@@ -27,7 +28,8 @@ def menu():
     print("2 - Consultar tarefas")
     print("3 - Editar tarefa")
     print("4 - Excluir tarefa")
-    print("5 - Sair")
+    print("5 - Filtrar tarefas por status")
+    print("6 - Sair")
 
 
 def cadastrar_tarefa(tarefas):
@@ -37,7 +39,9 @@ def cadastrar_tarefa(tarefas):
         print("O título não pode ficar vazio!")
         return
 
-    prioridade = input("Prioridade (Baixa, Média ou Alta): ").strip().capitalize()
+    prioridade = input(
+        "Prioridade (Baixa, Média ou Alta): "
+    ).strip().capitalize()
 
     if prioridade not in ["Baixa", "Média", "Alta"]:
         print("Prioridade inválida!")
@@ -71,6 +75,50 @@ def consultar_tarefas(tarefas):
         )
 
 
+def filtrar_tarefas(tarefas):
+    if not tarefas:
+        print("Nenhuma tarefa cadastrada.")
+        return
+
+    print("\n===== FILTRAR TAREFAS =====")
+    print("1 - A Fazer")
+    print("2 - Em Progresso")
+    print("3 - Concluída")
+
+    opcao = input("Escolha o status: ")
+
+    status_opcoes = {
+        "1": "A Fazer",
+        "2": "Em Progresso",
+        "3": "Concluída"
+    }
+
+    if opcao not in status_opcoes:
+        print("Opção inválida!")
+        return
+
+    status_escolhido = status_opcoes[opcao]
+
+    encontradas = [
+        tarefa for tarefa in tarefas
+        if tarefa["status"] == status_escolhido
+    ]
+
+    if not encontradas:
+        print("Nenhuma tarefa encontrada com esse status.")
+        return
+
+    print("\n===== RESULTADO DO FILTRO =====")
+
+    for tarefa in encontradas:
+        print(
+            f"ID: {tarefa['id']} | "
+            f"Título: {tarefa['titulo']} | "
+            f"Prioridade: {tarefa['prioridade']} | "
+            f"Status: {tarefa['status']}"
+        )
+
+
 def editar_tarefa(tarefas):
     consultar_tarefas(tarefas)
 
@@ -78,7 +126,9 @@ def editar_tarefa(tarefas):
         return
 
     try:
-        id_tarefa = int(input("Digite o ID da tarefa que deseja editar: "))
+        id_tarefa = int(
+            input("Digite o ID da tarefa que deseja editar: ")
+        )
     except ValueError:
         print("Digite um ID numérico válido!")
         return
@@ -86,9 +136,11 @@ def editar_tarefa(tarefas):
     for tarefa in tarefas:
         if tarefa["id"] == id_tarefa:
             novo_titulo = input("Novo título: ").strip()
+
             nova_prioridade = input(
                 "Nova prioridade (Baixa, Média ou Alta): "
             ).strip().capitalize()
+
             novo_status = input(
                 "Novo status (A Fazer, Em Progresso ou Concluída): "
             ).strip().title()
@@ -101,7 +153,9 @@ def editar_tarefa(tarefas):
                 print("Prioridade inválida!")
                 return
 
-            if novo_status not in ["A Fazer", "Em Progresso", "Concluída"]:
+            if novo_status not in [
+                "A Fazer", "Em Progresso", "Concluída"
+            ]:
                 print("Status inválido!")
                 return
 
@@ -123,7 +177,9 @@ def excluir_tarefa(tarefas):
         return
 
     try:
-        id_tarefa = int(input("Digite o ID da tarefa que deseja excluir: "))
+        id_tarefa = int(
+            input("Digite o ID da tarefa que deseja excluir: ")
+        )
     except ValueError:
         print("Digite um ID numérico válido!")
         return
@@ -158,6 +214,9 @@ def iniciar_sistema():
             excluir_tarefa(tarefas)
 
         elif opcao == "5":
+            filtrar_tarefas(tarefas)
+
+        elif opcao == "6":
             print("Encerrando o sistema...")
             break
 
