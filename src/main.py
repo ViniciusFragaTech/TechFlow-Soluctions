@@ -5,21 +5,42 @@
 # =====================================
 
 import json
-import os
+from pathlib import Path
 
-ARQUIVO_DADOS = "tarefas.json"
+# Salva o arquivo tarefas.json na pasta principal do projeto
+ARQUIVO_DADOS = Path(__file__).resolve().parent.parent / "tarefas.json"
 
 
 def carregar_tarefas():
-    if os.path.exists(ARQUIVO_DADOS):
+    """Carrega as tarefas armazenadas no arquivo JSON."""
+
+    if not ARQUIVO_DADOS.exists():
+        return []
+
+    try:
         with open(ARQUIVO_DADOS, "r", encoding="utf-8") as arquivo:
-            return json.load(arquivo)
-    return []
+            tarefas = json.load(arquivo)
+
+        if isinstance(tarefas, list):
+            return tarefas
+
+        print("Aviso: formato dos dados inválido. Iniciando lista vazia.")
+        return []
+
+    except (json.JSONDecodeError, OSError):
+        print("Aviso: não foi possível carregar os dados.")
+        return []
 
 
 def salvar_tarefas(tarefas):
-    with open(ARQUIVO_DADOS, "w", encoding="utf-8") as arquivo:
-        json.dump(tarefas, arquivo, indent=4, ensure_ascii=False)
+    """Salva as tarefas no arquivo JSON."""
+
+    try:
+        with open(ARQUIVO_DADOS, "w", encoding="utf-8") as arquivo:
+            json.dump(tarefas, arquivo, indent=4, ensure_ascii=False)
+
+    except OSError:
+        print("Erro ao salvar as tarefas!")
 
 
 def menu():
@@ -47,8 +68,13 @@ def cadastrar_tarefa(tarefas):
         print("Prioridade inválida!")
         return
 
+    novo_id = max(
+        [tarefa["id"] for tarefa in tarefas],
+        default=0
+    ) + 1
+
     tarefa = {
-        "id": max([t["id"] for t in tarefas], default=0) + 1,
+        "id": novo_id,
         "titulo": titulo,
         "prioridade": prioridade,
         "status": "A Fazer"
@@ -56,6 +82,7 @@ def cadastrar_tarefa(tarefas):
 
     tarefas.append(tarefa)
     salvar_tarefas(tarefas)
+
     print("Tarefa cadastrada com sucesso!")
 
 
@@ -135,6 +162,7 @@ def editar_tarefa(tarefas):
 
     for tarefa in tarefas:
         if tarefa["id"] == id_tarefa:
+
             novo_titulo = input("Novo título: ").strip()
 
             nova_prioridade = input(
@@ -154,7 +182,9 @@ def editar_tarefa(tarefas):
                 return
 
             if novo_status not in [
-                "A Fazer", "Em Progresso", "Concluída"
+                "A Fazer",
+                "Em Progresso",
+                "Concluída"
             ]:
                 print("Status inválido!")
                 return
@@ -164,6 +194,7 @@ def editar_tarefa(tarefas):
             tarefa["status"] = novo_status
 
             salvar_tarefas(tarefas)
+
             print("Tarefa atualizada com sucesso!")
             return
 
@@ -188,6 +219,7 @@ def excluir_tarefa(tarefas):
         if tarefa["id"] == id_tarefa:
             tarefas.remove(tarefa)
             salvar_tarefas(tarefas)
+
             print("Tarefa excluída com sucesso!")
             return
 
