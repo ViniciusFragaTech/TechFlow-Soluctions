@@ -6,7 +6,7 @@ O projeto consiste no desenvolvimento de um sistema de gerenciamento de tarefas 
 
 A empresa foi contratada por uma startup do setor de logística que necessita de uma ferramenta para organizar suas atividades, acompanhar o andamento dos trabalhos e melhorar a produtividade da equipe.
 
-O sistema será desenvolvido utilizando a linguagem Python e terá como objetivo facilitar o gerenciamento das tarefas, permitindo que os responsáveis acompanhem as atividades de maneira organizada.
+O sistema será desenvolvido utilizando a linguagem Python e permitirá que os responsáveis acompanhem as atividades de maneira organizada.
 
 ## 2. Objetivo do Projeto
 
@@ -18,47 +18,44 @@ Desenvolver um sistema simples e funcional que permita:
 - Excluir tarefas.
 - Definir prioridades para as atividades.
 - Acompanhar o andamento das tarefas.
-- Identificar atividades pendentes e concluídas.
-
-Com essas funcionalidades, pretende-se melhorar a organização e o acompanhamento das atividades da equipe.
+- Filtrar tarefas conforme seu status.
 
 ## 3. Escopo do Projeto
 
-O sistema contará inicialmente com as seguintes funcionalidades:
+O sistema possui as seguintes funcionalidades:
 
-- **Cadastro:** permitir a criação de novas tarefas.
-- **Consulta:** visualizar as tarefas cadastradas.
-- **Edição:** modificar informações de tarefas existentes.
-- **Exclusão:** remover tarefas cadastradas.
-- **Priorização:** classificar tarefas conforme seu nível de prioridade.
-- **Acompanhamento:** identificar se uma tarefa está pendente, em andamento ou concluída.
-
-O desenvolvimento inicial será concentrado nas funcionalidades essenciais de gerenciamento de tarefas. Novas funcionalidades poderão ser adicionadas conforme as necessidades identificadas durante o projeto.
+- **Cadastro:** permite criar novas tarefas.
+- **Consulta:** permite visualizar as tarefas cadastradas.
+- **Edição:** permite modificar informações das tarefas existentes.
+- **Exclusão:** permite remover tarefas cadastradas.
+- **Priorização:** permite classificar tarefas como Baixa, Média ou Alta.
+- **Acompanhamento:** permite identificar o status de cada tarefa.
+- **Filtro por status:** permite visualizar somente as tarefas de acordo com o status selecionado.
 
 ## 4. Metodologia Ágil Adotada
 
-A metodologia escolhida para o desenvolvimento será o **Kanban**.
+A metodologia escolhida para o desenvolvimento foi o **Kanban**.
 
-O Kanban é uma metodologia de organização visual do trabalho que permite acompanhar o andamento das atividades por meio de um quadro dividido em etapas.
+O Kanban permite acompanhar o andamento das atividades por meio de um quadro dividido em três etapas:
 
-Para este projeto, será utilizado o GitHub Projects, com três colunas principais:
+- **Todo (A Fazer):** tarefas que ainda precisam ser realizadas.
+- **In Progress (Em Progresso):** tarefas que estão sendo desenvolvidas.
+- **Done (Concluído):** tarefas que já foram finalizadas.
 
-- **A Fazer (To Do):** tarefas que ainda precisam ser realizadas.
-- **Em Progresso (In Progress):** tarefas que estão sendo desenvolvidas.
-- **Concluído (Done):** tarefas que já foram finalizadas.
-
-Essa metodologia permitirá organizar as atividades, acompanhar o progresso do desenvolvimento e identificar possíveis atrasos ou dificuldades.
+Para organizar as atividades, foi utilizado o GitHub Projects.
 
 ## 5. Tecnologias Utilizadas
 
 - **Python:** linguagem utilizada para desenvolver o sistema.
 - **GitHub:** plataforma para armazenar e controlar as versões do projeto.
 - **GitHub Projects:** ferramenta para organização das tarefas utilizando Kanban.
-- **GitHub Actions:** ferramenta para automatizar a execução dos testes e o controle de qualidade.
+- **GitHub Actions:** ferramenta para automatizar a execução dos testes.
+- **unittest:** biblioteca utilizada para criar os testes automatizados.
+- **JSON:** formato utilizado para armazenar as tarefas.
 
-## 6. Estrutura Inicial do Projeto
+## 6. Estrutura do Projeto
 
-A organização inicial dos arquivos será:
+A organização dos arquivos está dividida da seguinte maneira:
 
 ```text
 TechFlow-Solutions/
@@ -70,11 +67,17 @@ TechFlow-Solutions/
 │   └── test_main.py
 │
 ├── docs/
+│   ├── documentacao.md
+│   ├── diagrama_casos_de_uso.md
+│   ├── diagrama_de_classes.md
+│   └── fluxograma.md
 │
 ├── .github/
 │   └── workflows/
+│       └── tests.yml
 │
-└── README.md
+├── README.md
+└── tarefas.json (criado durante a execução)
 ```
 
 ## 7. Instruções para Executar o Sistema
@@ -84,29 +87,45 @@ Para executar o projeto, será necessário:
 1. Ter o Python instalado no computador.
 2. Clonar ou baixar o repositório do GitHub.
 3. Abrir a pasta do projeto em um terminal.
-4. Executar o comando:
+4. Executar o seguinte comando:
 
 ```bash
 python src/main.py
 ```
 
+O sistema apresentará um menu com as opções disponíveis para gerenciamento das tarefas.
+
 ## 8. Controle de Qualidade
 
-O projeto utilizará testes automatizados para verificar o funcionamento das funcionalidades desenvolvidas.
+O projeto utiliza testes automatizados com a biblioteca unittest para verificar o funcionamento das funcionalidades implementadas.
 
-Também será configurado um pipeline utilizando GitHub Actions para executar os testes automaticamente e auxiliar na identificação de erros durante o desenvolvimento.
+Também foi configurado um fluxo de integração contínua utilizando GitHub Actions, responsável por executar os testes automaticamente após alterações no repositório.
 
 ## 9. Gestão de Mudanças
 
-Durante o desenvolvimento, poderá ocorrer uma alteração no escopo inicial do projeto.
+Durante o desenvolvimento, foi identificada a necessidade de adicionar uma nova funcionalidade ao escopo inicial.
 
-Caso seja identificada a necessidade de adicionar uma nova funcionalidade, ela será documentada e incluída no quadro Kanban, permitindo acompanhar sua implementação e seus impactos no planejamento.
+**Nova funcionalidade: Filtro de tarefas por status.**
 
-As alterações realizadas serão registradas no README e no histórico de commits do GitHub, mantendo a documentação atualizada.
+A funcionalidade permite visualizar tarefas conforme os seguintes status:
 
----
+- A Fazer.
+- Em Progresso.
+- Concluída.
 
-**Projeto:** TechFlow Solutions — Sistema de Gerenciamento de Tarefas  
-**Linguagem:** Python  
-**Metodologia Ágil:** Kanban  
-**Plataforma de versionamento:** GitHub
+A alteração foi implementada no sistema, registrada na documentação e acompanhada pelo quadro Kanban.
+
+Também foram atualizados os testes automatizados para verificar o funcionamento do filtro.
+
+## 10. Persistência dos Dados
+
+As tarefas são armazenadas em um arquivo JSON, permitindo que as informações cadastradas sejam recuperadas quando o sistema for iniciado novamente.
+
+## 11. Informações do Projeto
+
+- **Projeto:** TechFlow Solutions — Sistema de Gerenciamento de Tarefas.
+- **Linguagem:** Python.
+- **Metodologia Ágil:** Kanban.
+- **Plataforma de versionamento:** GitHub.
+- **Testes automatizados:** unittest.
+- **Integração contínua:** GitHub Actions.
